@@ -4,7 +4,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
 import * as dat from 'dat.gui'
 import { generateUUID } from 'three/src/math/MathUtils'
+import imageSource from './static/textures/door/color.jpg'
 
+
+console.log(imageSource)
 /*
 *Debug
 */
