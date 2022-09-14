@@ -1,7 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-
+import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
 console.log(OrbitControls)
 /**
  * Cursor

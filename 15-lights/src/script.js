@@ -2,7 +2,11 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
-
+import { DirectionalLight, PointLight, Scene } from 'three'
+import { RectAreaLight } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
+// // adding light is as simple as adding
+// meshes. 
 /**
  * Base
  */
@@ -18,14 +22,93 @@ const scene = new THREE.Scene()
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+// const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+// scene.add(ambientLight)
+
+// const pointLight = new THREE.PointLight(0xffffff, 0.5)
+// pointLight.position.x = 2
+// pointLight.position.y = 3
+// pointLight.position.z = 4
+// scene.add(pointLight)
+
+/**
+ * Lights
+ */
+
+// ambient light: Bonces Light.  // *Minimal Cost
+const ambientLight = new THREE.AmbientLight(0xffffffff,0.5)
+ambientLight.color= new THREE.Color(0xffffff)
+ambientLight.intensity = 0.5
 scene.add(ambientLight)
 
-const pointLight = new THREE.PointLight(0xffffff, 0.5)
-pointLight.position.x = 2
-pointLight.position.y = 3
-pointLight.position.z = 4
+//Directional Light: Moderate cost to cpu
+// // Directional Light: Light coming in the same Direction. and Illuminates. like the sun.
+// //Light goes parrallel. Does not bounce. 
+const directionalLight = new THREE.DirectionalLight(0x00fffc,0.3)
+
+// //change position of DirL:
+directionalLight.position.set(1,0.25,0)
+scene.add(directionalLight)
+
+//Hemisphere Light: Minimal cost to cpu
+// // HemisphereLight is simliar to the ambientlight but a different color.
+//  from the sky. than the color coming from the ground
+      // SKy color// grass color. light.                                          //skycolor,groundcolor,intensity)
+const hemispherelight= new THREE.HemisphereLight(0xff0000,0x0000ff,0.3)
+scene.add(hemispherelight)
+
+//PintLight: Moderate to cpu
+const pointLight = new THREE.PointLight(0xff9000,0.5, 10, 2)
+pointLight.position.set(1,-0.5,1)
 scene.add(pointLight)
+gui.add(ambientLight,'intensity').min(0).max(1).step(0.001)
+
+//Rec area Light ; ** HIgh on performance
+//Only works with meshstandardmaterial and meshphysicalmaterial
+//having a rectangle light. dim a bit. in object. 
+//                                            Color, Intensity, Width,Height
+const rectAreaLight = new THREE.RectAreaLight(0x4e00ff,5,1,1)
+rectAreaLight.position.set(-1.5,0,1.5)
+rectAreaLight.lookAt(new THREE.Vector3())
+scene.add(rectAreaLight)
+
+
+//spotlight: It's ike a flashlight **HIGH ON PERFORMANCE.
+// THREE.SpotLight(Color, Instensity, Distance, angle, penumbra, decay)
+const spotLight = new THREE.SpotLight(0x78ff00,0.5,10,Math.PI*0.1, 0.25,1)
+spotLight.position.set(0,2,3)
+
+scene.add(spotLight)
+
+spotLight.target.position.x=-0.76
+scene.add(spotLight.target)
+
+/**
+ * HELPERS
+ */
+const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemispherelight,0.2)
+scene.add(hemisphereLightHelper)
+
+const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight,0.2)
+scene.add(directionalLightHelper)
+
+const pointLightHelper = new THREE.PointLightHelper(pointLight,0.2)
+scene.add(pointLightHelper)
+
+const spotLightHelper = new THREE.SpotLightHelper(spotLight)
+scene.add(spotLightHelper)
+window.requestAnimationFrame(()=>
+{
+    spotLightHelper.update()
+})
+
+const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight)
+scene.add(rectAreaLightHelper)
+
+// const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight)
+// scene.add(rectAreaLightHelper)
+
+
 
 /**
  * Objects
