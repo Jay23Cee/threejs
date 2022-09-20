@@ -78,7 +78,7 @@ grassRoughnessTexture.wrapT = THREE.RepeatWrapping
  
          // Text
          const textGeometry = new TextGeometry(
-             'Jackson\'s \nHunted House',
+             'Hunted House',
              {
                  font: font,
                  size: .25,
