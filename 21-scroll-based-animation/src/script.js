@@ -1,4 +1,4 @@
-import './style.css'
+import './css/style.css'
 import * as THREE from 'three'
 import * as dat from 'lil-gui'
 import { TextureLoader } from 'three'
@@ -48,7 +48,8 @@ const objectDistance =4
 
 
 const mesh1 = new THREE.Mesh(
-    new THREE.TorusGeometry(1,0.4,16,60),
+    // new THREE.TorusGeometry(1,0.4,16,60),
+    new THREE.TorusGeometry(1,0.4,17,60),
   material
 )
 
@@ -130,17 +131,18 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
+window.addEventListener('resize', (event) =>
 {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
-
+    
     // Update camera
     camera.aspect = sizes.width / sizes.height
     camera.updateProjectionMatrix()
-
+    
     // Update renderer
+    console.log("RESIZE", sizes.width/sizes.height)
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
@@ -169,6 +171,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 /**Scroll */
 let scrollY = window.scrollY
+let scrollX = window.scrollX
 
 let currentSection = 0
 
@@ -176,6 +179,8 @@ let currentSection = 0
 window.addEventListener('scroll', ()=>{
  //   console.log(scrollY)
     scrollY = window.scrollY
+    scrollX = window.scrollX
+
 
     const newsection = Math.round(  scrollY / sizes.height)
    
@@ -194,6 +199,23 @@ window.addEventListener('scroll', ()=>{
                  )
     }
 
+
+    const newsection2 = Math.round(  scrollX / sizes.width)
+   
+    if (newsection2 != currentSection){
+        currentSection = newsection
+
+        gsap.to(
+            sectionMeshes[currentSection].rotation,
+            {
+                duration:1.5,
+                ease:'power2.inOut',
+                x: '+=6',
+                y: '+=3',
+                z:'+=1.5'
+            }   
+                 )
+    }
 })
 
 
@@ -241,6 +263,12 @@ const tick = () =>
         mesh.rotation.x += deltatime * 0.1
         mesh.rotation.y += deltatime * 0.12
     }
+
+
+    const canvas = renderer.domElement;
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+
 
     // Render
     renderer.render(scene, camera)
